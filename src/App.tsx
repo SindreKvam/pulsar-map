@@ -40,26 +40,19 @@ const Sidebar = ({pulsars, addPulsar, removePulsar}) => {
     };
 
     return (
-        <>
-        
-        <div>
+        <aside>
+        <h2>Pulsars</h2>
+        <input 
+            id="pulsar-search-bar" 
+            placeholder="Enter pulsar name" 
+            value={input}
+            onChange={(val) => setInput(val.target.value)}>
+        </input>
 
-            <input 
-                id="pulsar-search-bar" 
-                placeholder="Enter pulsar name" 
-                value={input}
-                onChange={(val) => setInput(val.target.value)}>
-            </input>
-        </div>
+        <button onClick={()=> handleAdd(input)}>
+            Add Pulsar
+        </button>
 
-        <br></br> {/* patapim */}
-
-        <div>
-            <button onClick={()=> handleAdd(input)}>
-                Add Pulsar
-            </button>
-
-        </div>
         <hr></hr>
         <div>
             Active pulsar(s):
@@ -72,13 +65,14 @@ const Sidebar = ({pulsars, addPulsar, removePulsar}) => {
                 ))}
             </ul>
         </div>
-        </>
+        </aside>
     )
 };
 
 const PulsarMap = ({pulsars}) => {
     return (
         <>
+
         </>
     )
 }

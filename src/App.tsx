@@ -42,7 +42,7 @@ const Sidebar = ({pulsars, addPulsar, removePulsar}) => {
             <ul>
                 {pulsars.map((p, index) => (
                     <li key={index}>
-                        <span>{p}</span>
+                        <span>{p.name}</span>
                         <button onClick={() => removePulsar(p)}>x</button>
                     </li>
                 ))}
@@ -65,23 +65,32 @@ const PulsarMap = ({pulsars}) => {
 
 function App() {
 
-    const [pulsars, setPulsars] = useState([])
+    const [pulsars, setPulsars] = useState<Pulsar[]>([]);
 
-    const addPulsar = (name) => {
-        if (!pulsars.includes(name)) {
-            setPulsars([...pulsars, name]);
+    const addPulsar = async (name: any) => {
+        if (pulsars.find((p) => p.name === name)) return;
+
+        try {
+            const data = await fetchPulsarData(name);
+            console.log("Data to put in pulsar array",data)
+            setPulsars([...pulsars, data]);
+
+        } catch (err) {
+            console.error("Error fetching pulsar data: ", err);
         }
     };
 
-    const removePulsar = (name) => {
+    const removePulsar = (name: any) => {
         setPulsars(pulsars.filter(p => p !== name));
     };
 
-    const fetchPulsarData = async (name:any) => {
+    const fetchPulsarData = async (name: any) => {
         const response = await fetch(`/pulsar?name=${name}`);
         const data = await response.json();
 
-        console.log(data);
+        if (!response.ok) {
+            alert(`Error fetching pulsar data: ${data.message}`);
+        }
 
         const parsed_data = parsePulsarData(data);
 

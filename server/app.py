@@ -53,4 +53,7 @@ def get_pulsar():
         return jsonify({"error": str(e)}), 400
 
 
-app.run(port=5000)
+if __name__ == "__main__":
+    # Run the Flask app
+
+    app.run(port=5000)

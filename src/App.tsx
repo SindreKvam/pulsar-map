@@ -65,8 +65,9 @@ const Sidebar = ({pulsars, addPulsar, removePulsar}) => {
 
     return (
         <aside>
-        <h2>Pulsars</h2>
+        <h1>Pulsars</h1>
         <input 
+            style={{ width: "60%", padding: "8px", marginBottom: "10px" }}
             id="pulsar-search-bar" 
             placeholder="Enter pulsar name" 
             value={input}
@@ -89,6 +90,7 @@ const Sidebar = ({pulsars, addPulsar, removePulsar}) => {
 const PulsarMap = ({pulsars}) => {
     return (
         <div>
+            <hr></hr>
             <h2>Pulsar Map</h2>
             <div>
                 {pulsars.length === 0 ? "No pulsars added yet." : "[Map visualization placeholder]"}

@@ -9,9 +9,50 @@ type Pulsar = {
     gl: number;
     gb: number;
     period_s: number;
+    period_h_transition: number;
     distance_kpc: number;
+    distance_relative: number;
     age: number;
 }
+
+const PulsarTable = ({pulsars, removePulsar}) => {
+    return (
+        <table style={{ borderCollapse: "collapse", width: "100%" }}>
+            <thead>
+                <tr>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Name</th>
+                    {/* <th>RA</th>
+                    <th>Dec</th> */}
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Galactic Longitude</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Galactic Latitude</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Period (s)</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Period (Base 10, H transition unit)</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Distance (kpc)</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Relative Distance (%)</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Age (Myr)</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {pulsars.map((p, index) => (
+                    <tr key={index}>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.name}</td>
+                        {/* <td>{p.ra}</td>
+                        <td>{p.dec}</td> */}
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.gl.toFixed(2)}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.gb.toFixed(2)}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.period_s.toFixed(2)}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.period_h_transition.toFixed(0)}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.distance_kpc}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.distance_relative.toFixed(2)}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.age.toExponential(2)}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}><button onClick={() => removePulsar(p)}>x</button></td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    );
+};
 
 const Sidebar = ({pulsars, addPulsar, removePulsar}) => {
 
@@ -38,15 +79,8 @@ const Sidebar = ({pulsars, addPulsar, removePulsar}) => {
 
         <hr></hr>
         <div>
-            Active pulsar(s):
-            <ul>
-                {pulsars.map((p, index) => (
-                    <li key={index}>
-                        <span>{p.name}</span>
-                        <button onClick={() => removePulsar(p)}>x</button>
-                    </li>
-                ))}
-            </ul>
+            <h2>Active Pulsars</h2>
+            <PulsarTable pulsars={pulsars} removePulsar={removePulsar} />
         </div>
         </aside>
     )
@@ -85,7 +119,7 @@ function App() {
     };
 
     const fetchPulsarData = async (name: any) => {
-        const response = await fetch(`/pulsar?name=${name}`);
+        const response = await fetch(`/pulsar?name=${encodeURIComponent(name)}`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -104,7 +138,9 @@ function App() {
         gl: json_data.galactic_position.gl,
         gb: json_data.galactic_position.gb,
         period_s: json_data.period_s,
+        period_h_transition: json_data.period_s / 7.04225e-10, // p.period_s / 7.04225e-10
         distance_kpc: json_data.distance_kpc,
+        distance_relative: json_data.distance_kpc * 100 / 8, // p.distance_kpc * 100 / 8
         age: json_data.characteristics.age,
     });
 

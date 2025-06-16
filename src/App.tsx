@@ -2,6 +2,17 @@ import { useState } from 'react'
 import './App.css'
 
 
+type Pulsar = {
+    name: string;
+    ra: string;
+    dec: string;
+    gl: number;
+    gb: number;
+    period_s: number;
+    distance_kpc: number;
+    age: number;
+}
+
 const Sidebar = ({pulsars, addPulsar, removePulsar}) => {
 
     const [input, setInput] = useState("");
@@ -66,6 +77,28 @@ function App() {
         setPulsars(pulsars.filter(p => p !== name));
     };
 
+    const fetchPulsarData = async (name:any) => {
+        const response = await fetch(`/pulsar?name=${name}`);
+        const data = await response.json();
+
+        console.log(data);
+
+        const parsed_data = parsePulsarData(data);
+
+        return parsed_data;
+    };
+
+    const parsePulsarData = (json_data: any): Pulsar => ({
+        name: json_data.name,
+        ra: json_data.position.ra,
+        dec: json_data.position.dec,
+        gl: json_data.galactic_position.gl,
+        gb: json_data.galactic_position.gb,
+        period_s: json_data.period_s,
+        distance_kpc: json_data.distance_kpc,
+        age: json_data.characteristics.age,
+    });
+
     return (
         <div>
             <Sidebar pulsars={pulsars} addPulsar={addPulsar} removePulsar={removePulsar}/>
@@ -73,13 +106,6 @@ function App() {
         </div>
     )
 }
-
-
-const fetchPulsarData = async (name) => {
-  const response = await fetch(`https://example.com/api/pulsars/${name}`);
-  const data = await response.json();
-  return data;
-};
 
 
 export default App

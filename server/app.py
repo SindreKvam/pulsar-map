@@ -12,6 +12,8 @@ PARAMETERS = [
     "GL",  # Galactic position
     "GB",
     "P0",  # Period
+    "P1",  # Period derivative
+    "PEPOCH",  # Epoch of period
     "DM",  # Dispersion Measure
     "DIST",  # Distance proxies
     "PX",
@@ -31,6 +33,8 @@ def pulsar_data_to_dict(data) -> dict:
         "position": {"ra": data["RAJ"][0], "dec": data["DECJ"][0]},
         "galactic_position": {"gl": data["GL"][0], "gb": data["GB"][0]},
         "period_s": data["P0"][0],
+        "period_derivative": data["P1"][0],
+        "period_epoch": data["PEPOCH"][0],
         "dispersion_measure": data["DM"][0],
         "distance_kpc": data["DIST"][0] or data["PX"][0],
         "flux_density_1400": data["S1400"][0],

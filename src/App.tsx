@@ -11,6 +11,7 @@ type Pulsar = {
     gl: number;
     gb: number;
     angle_rad: number;
+    latitude_rad: number;
     period_s: number;
     period_derivative: number;
     period_epoch: number;
@@ -34,9 +35,10 @@ const PulsarTable = ({pulsars, removePulsar}) => {
                     <th style={{ border: "1px solid #ccc", padding: "8px" }}>Name</th>
                     {/* <th>RA</th>
                     <th>Dec</th> */}
-                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Galactic Longitude</th>
-                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Galactic Latitude</th>
-                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Angle (rad)</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Galactic Longitude (deg)</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Galactic Latitude (deg)</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Galactic Longitude (rad)</th>
+                    <th style={{ border: "1px solid #ccc", padding: "8px" }}>Galactic Latitude (rad)</th>
                     <th style={{ border: "1px solid #ccc", padding: "8px" }}>Period (s)</th>
                     <th style={{ border: "1px solid #ccc", padding: "8px" }}>Period derivative (s/s)</th>
                     <th style={{ border: "1px solid #ccc", padding: "8px" }}>Period epoch (mjd)</th>
@@ -56,6 +58,7 @@ const PulsarTable = ({pulsars, removePulsar}) => {
                         <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.gl.toFixed(2)}</td>
                         <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.gb.toFixed(2)}</td>
                         <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.angle_rad.toFixed(2)}</td>
+                        <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.latitude_rad.toFixed(2)}</td>
                         <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.period_s.toFixed(2)}</td>
                         <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.period_derivative.toExponential(2)}</td>
                         <td style={{ border: "1px solid #ccc", padding: "8px" }}>{p.period_epoch.toFixed(2)}</td>
@@ -129,7 +132,7 @@ const PulsarMap = ({pulsars, width, height, scaleFactor}) => {
                 {useCalculatedPeriod ? "Using calculated data" : "Using period from data" }
             </button>
             <div>
-                <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ border: "2px solid #ccc" }}>
+                <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ border: "2px solid #ccc", backgroundColor: "white" }}>
 
                     {/* Draw line to centre of the milky way, and add a notch at the end. */}
                     <line x1={centerX} y1={centerY} x2={centerX + scaleFactor} y2={centerY} stroke="black" strokeWidth={lineThickness} />
@@ -141,6 +144,10 @@ const PulsarMap = ({pulsars, width, height, scaleFactor}) => {
 
                         const x = centerX + radius * Math.cos(angle);
                         const y = centerY + radius * Math.sin(angle);
+
+                        // Calculate z-coordinate
+                        const z_kpc = p.distance_kpc * Math.abs(Math.sin(p.latitude_rad));
+                        const z_relative = z_kpc / 8 * scaleFactor; // Relative distance in kpc
 
                         // Calculate delta time in seconds from the period epoch to the selected date
                         const periodEpochMJD = p.period_epoch;
@@ -174,10 +181,28 @@ const PulsarMap = ({pulsars, width, height, scaleFactor}) => {
                                     stroke="black"
                                     strokeWidth={lineThickness}
                                 />
+                                {/* Notch to separate distance along plane, to distance from plane */}
+                                <line
+                                    x1={x - notchLength / 2 * Math.cos(angle + Math.PI / 2)}
+                                    y1={y - notchLength / 2 * Math.sin(angle + Math.PI / 2)}
+                                    x2={x + notchLength / 2 * Math.cos(angle + Math.PI / 2)}
+                                    y2={y + notchLength / 2 * Math.sin(angle + Math.PI / 2)}
+                                    stroke="black"
+                                    strokeWidth={lineThickness}
+                                />
+                                {/* line after notch to indicate relative z-length */}
+                                <line
+                                    x1={x}
+                                    y1={y}
+                                    x2={x + z_relative * Math.cos(angle)}
+                                    y2={y + z_relative * Math.sin(angle)}
+                                    stroke="black"
+                                    strokeWidth={lineThickness}
+                                />
 
                                 {ticks.map((tick, tickIndex) => {
 
-                                    const notchR = radius + totalNotchLength;
+                                    const notchR = radius + z_relative + totalNotchLength;
                                     let notchBaseX = centerX + notchR * Math.cos(angle);
                                     let notchBaseY = centerY + notchR * Math.sin(angle);
 
@@ -208,6 +233,13 @@ const PulsarMap = ({pulsars, width, height, scaleFactor}) => {
                                         />
                                     )
                                 })};
+                                {/* <text
+                                    x={x}
+                                    y={y}
+                                    fontSize="12"
+                                    textAnchor="middle"
+                                    fill="black">{p.name}
+                                </text> */}
                             </g>
                         )
                     })};
@@ -258,6 +290,7 @@ function App() {
         gl: json_data.galactic_position.gl,
         gb: json_data.galactic_position.gb,
         angle_rad: json_data.galactic_position.gl * Math.PI / 180,
+        latitude_rad: json_data.galactic_position.gb * Math.PI / 180,
         period_s: json_data.period_s,
         period_derivative: json_data.period_derivative,
         period_epoch: json_data.period_epoch,

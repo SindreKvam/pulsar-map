@@ -115,7 +115,6 @@ const PulsarMap = ({pulsars, width, height, scaleFactor}) => {
     const spaceBeforeNotch = 2; // Space before the first notch
 
     const selectedTimeMJD = dateToMJD(selectedDate);
-    console.log("Selected MJD: ", selectedTimeMJD);
 
     return (
         <div>
@@ -147,7 +146,6 @@ const PulsarMap = ({pulsars, width, height, scaleFactor}) => {
 
                         const selectedPeriodSeconds = p.period_s + (p.period_derivative * deltaTimeMJDSeconds);
                         const selectedPeriodHTransition = selectedPeriodSeconds / 7.040241838e-10; // Convert to H transition unit
-                        console.log(`Selected period for ${p.name}: ${selectedPeriodSeconds} seconds, H transition unit: ${selectedPeriodHTransition}`);
 
                         // Binary encoding
                         let binary = '';

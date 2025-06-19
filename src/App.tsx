@@ -250,7 +250,7 @@ function App() {
         try {
             const data = await fetchPulsarData(name);
             console.log("Data to put in pulsar array",data)
-            setPulsars([...pulsars, data]);
+            setPulsars((prevPulsars) => [...prevPulsars, data]);
 
         } catch (err) {
             console.error("Error fetching pulsar data: ", err);

@@ -112,7 +112,7 @@ const PulsarMap = ({pulsars, width, height, scaleFactor}) => {
     const lineThickness = 1; // Thickness of the lines
     const notchLength = scaleFactor * 0.0075; // Length of the notches
     const tickSpacing = notchLength * 0.15; // Spacing between notches
-    const spaceBeforeNotch = 2; // Space before the first notch
+    const spaceBeforeNotch = notchLength * 1.75; // Space before the first notch
 
     const selectedTimeMJD = dateToMJD(selectedDate);
 

@@ -24,6 +24,10 @@ flask run
 ```
 
 After the backend server is started, you are ready to run the React application.
+First, install the npm dependencies:
+```bash
+npm install
+```
 In a separate terminal, run the following command:
 ```bash
 npm run dev

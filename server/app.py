@@ -43,7 +43,7 @@ def pulsar_data_to_dict(data) -> dict:
     # Calculate the distance along the galactic plane
     relative_xy_distance = relative_distance * np.cos(galactic_latitude_rad)
     # Calculate the distance to the galactic plane
-    relative_z_distance = relative_distance * np.sin(galactic_latitude_rad)
+    relative_z_distance = relative_distance * np.abs(np.sin(galactic_latitude_rad))
 
     return {
         "name": data["PSRJ"][0],

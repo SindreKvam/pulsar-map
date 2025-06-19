@@ -244,12 +244,20 @@ function App() {
 
     const [pulsars, setPulsars] = useState<Pulsar[]>([]);
 
+    const addPulsars = (name: any) => {
+        // Check if there is a comma-separated list of pulsars
+        let names: Array<string> = name.split(",").map((n: string) => n.trim());
+
+        {names.map((n) => {
+            addPulsar(n);
+        })};
+    };
+
     const addPulsar = async (name: any) => {
         if (pulsars.find((p) => p.name === name)) return;
 
         try {
             const data = await fetchPulsarData(name);
-            console.log("Data to put in pulsar array",data)
             setPulsars((prevPulsars) => [...prevPulsars, data]);
 
         } catch (err) {
@@ -293,14 +301,14 @@ function App() {
         <div>
             <Sidebar
                 pulsars={pulsars}
-                addPulsar={addPulsar}
+                addPulsar={addPulsars}
                 removePulsar={removePulsar}
             />
             <PulsarMap
                 pulsars={pulsars}
-                width={1200}
-                height={600}
-                scaleFactor={600}
+                width={2000}
+                height={1500}
+                scaleFactor={1000}
             />
         </div>
     )

@@ -1,54 +1,34 @@
-# React + TypeScript + Vite
+# README
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This pulsar map application has been made to generate updated 
+Pulsar Maps based on latest data fetched from ATNF pulsar database.
 
-Currently, two official plugins are available:
+As well as generating pulsar maps with estimated periods at a specific date.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The application has two main components. A backend server written in python.
+And a frontend React application that is used to generate the map.
 
-## Expanding the ESLint configuration
+## Running the application (development)
+To start the backend server, start by installing the python dependencies in a virtual environment.
+```bash
+cd server/
+python -m venv venv
+venv/bin/activate
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+pip install -r requirements.txt
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+Then run the server by running:
+```bash
+flask run
 ```
+
+After the backend server is started, you are ready to run the React application.
+In a separate terminal, run the following command:
+```bash
+npm run dev
+```
+
+In a browser, go to the following address `http://localhost:5173/` and start adding pulsars by inserting the name.
+To generate the original pulsar map, but with updated data, add the following pulsars.
+`J1731-4744, J1456-6843, J1243-6423, J0835-4510, J0953+0755, J0826+2637, J0534+2200, J0528+2200, J0332+5434, J2219+4754, J2018+2839, J1935+1616, J1932+1059, J1645-0317`

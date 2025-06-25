@@ -1,6 +1,7 @@
-import { use, useState } from 'react'
+import React from 'react'
+import { useState } from 'react'
 import DatePicker from 'react-datepicker'
-import './App.css'
+import './styles/App.css'
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -25,7 +26,12 @@ function dateToMJD(date = new Date()): number {
     return jd - 2400000.5; // Convert to Modified Julian Date (MJD)
 }
 
-const PulsarTable = ({pulsars, removePulsar}) => {
+interface PulsarTableProps {
+    pulsars: Pulsar[];
+    removePulsar: Function;
+}
+
+const PulsarTable: React.FC<PulsarTableProps> = ({pulsars, removePulsar}) => {
     return (
         <table>
             <thead>
@@ -60,6 +66,7 @@ const PulsarTable = ({pulsars, removePulsar}) => {
                         <td>{p.distance_relative_xy_plane.toFixed(2)}</td>
                         <td>{p.distance_relative_z_plane.toFixed(2)}</td>
                         <td>{p.age.toExponential(2)}</td>
+                        {/* Add button to remove pulsar if wanted */}
                         <td><button onClick={() => removePulsar(p)}>x</button></td>
                     </tr>
                 ))}
@@ -68,11 +75,17 @@ const PulsarTable = ({pulsars, removePulsar}) => {
     );
 };
 
-const Sidebar = ({pulsars, addPulsar, removePulsar}) => {
+interface SidebarProps {
+    pulsars: Pulsar[];
+    addPulsar: Function;
+    removePulsar: Function;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({pulsars, addPulsar, removePulsar}) => {
 
     const [input, setInput] = useState("");
 
-    const handleAdd = (name) => {
+    const handleAdd = (name: string) => {
         addPulsar(name)
         setInput("")
     };
@@ -101,7 +114,14 @@ const Sidebar = ({pulsars, addPulsar, removePulsar}) => {
     )
 };
 
-const PulsarMap = ({pulsars, width, height, scaleFactor}) => {
+interface PulsarMapProps {
+    pulsars: Pulsar[];
+    width: number;
+    height: number;
+    scaleFactor: number;
+}
+
+const PulsarMap: React.FC<PulsarMapProps> = ({pulsars, width, height, scaleFactor}) => {
 
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [useCalculatedPeriod, setUseCalculatedPeriod] = useState(false);
@@ -120,12 +140,14 @@ const PulsarMap = ({pulsars, width, height, scaleFactor}) => {
         <div>
             <hr></hr>
             <h2>Pulsar Map</h2>
-            <DatePicker selected={selectedDate} onChange={(date) => setSelectedDate(date)} dateFormat={"dd/MM/yyyy"}/>
+            <DatePicker selected={selectedDate} 
+                onChange={ (date) => setSelectedDate(date) }
+                dateFormat={"dd/MM/yyyy"}/>
             <button onClick={() => setUseCalculatedPeriod(!useCalculatedPeriod)}>
-                {useCalculatedPeriod ? "Using calculated data" : "Using period from data" }
+                {useCalculatedPeriod ? "Using calculated period from date" : "Using period from data" }
             </button>
             <div>
-                <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ border: "2px solid #ccc", backgroundColor: "white" }}>
+                <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} >
 
                     {/* Draw line to centre of the milky way, and add a notch at the end. */}
                     <line x1={centerX} y1={centerY} x2={centerX + scaleFactor} y2={centerY} stroke="black" strokeWidth={lineThickness} />

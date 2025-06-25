@@ -35,4 +35,7 @@ npm run dev
 
 In a browser, go to the following address `http://localhost:5173/` and start adding pulsars by inserting the name.
 To generate the original pulsar map, but with updated data, add the following pulsars.
-`J1731-4744, J1456-6843, J1243-6423, J0835-4510, J0953+0755, J0826+2637, J0534+2200, J0528+2200, J0332+5434, J2219+4754, J2018+2839, J1935+1616, J1932+1059, J1645-0317`
+`J1731-4744, J1456-6843, J1243-6423, J0835-4510, J0953+0755, J0826+2637,
+J0534+2200, J0528+2200, J0332+5434, J2219+4754, J2018+2839, J1935+1616,
+J1932+1059, J1645-0317`
+

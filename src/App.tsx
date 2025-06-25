@@ -150,8 +150,22 @@ const PulsarMap: React.FC<PulsarMapProps> = ({pulsars, width, height, scaleFacto
                 <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} >
 
                     {/* Draw line to centre of the milky way, and add a notch at the end. */}
-                    <line x1={centerX} y1={centerY} x2={centerX + scaleFactor} y2={centerY} stroke="black" strokeWidth={lineThickness} />
-                    <line x1={centerX + scaleFactor} y1={centerY + notchLength/2} x2={centerX + scaleFactor} y2={centerY - notchLength/2} stroke="black" strokeWidth={lineThickness} />
+                    <line 
+                        x1={centerX}
+                        y1={centerY}
+                        x2={centerX + scaleFactor}
+                        y2={centerY}
+                        stroke="black"
+                        strokeWidth={lineThickness}
+                    />
+                    <line 
+                        x1={centerX + scaleFactor}
+                        y1={centerY + notchLength/2}
+                        x2={centerX + scaleFactor}
+                        y2={centerY - notchLength/2}
+                        stroke="black"
+                        strokeWidth={lineThickness}
+                    />
 
                     {pulsars.map((p, index) => {
                         const galacticLongitudeRad = p.gl_rad;

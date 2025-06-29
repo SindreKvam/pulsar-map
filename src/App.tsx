@@ -31,7 +31,7 @@ interface PulsarTableProps {
     removePulsar: Function;
 }
 
-const PulsarTable: React.FC<PulsarTableProps> = ({pulsars, removePulsar}) => {
+const PulsarTable: React.FC<PulsarTableProps> = ({ pulsars, removePulsar }) => {
     return (
         <table>
             <thead>
@@ -81,7 +81,7 @@ interface SidebarProps {
     removePulsar: Function;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({pulsars, addPulsar, removePulsar}) => {
+const Sidebar: React.FC<SidebarProps> = ({ pulsars, addPulsar, removePulsar }) => {
 
     const [input, setInput] = useState("");
 
@@ -92,24 +92,24 @@ const Sidebar: React.FC<SidebarProps> = ({pulsars, addPulsar, removePulsar}) => 
 
     return (
         <aside>
-        <h1>Pulsars</h1>
-        <input 
-            style={{ width: "60%", padding: "8px", marginBottom: "10px" }}
-            id="pulsar-search-bar" 
-            placeholder="Enter pulsar name" 
-            value={input}
-            onChange={(val) => setInput(val.target.value)}>
-        </input>
+            <h1>Pulsars</h1>
+            <input
+                style={{ width: "60%", padding: "8px", marginBottom: "10px" }}
+                id="pulsar-search-bar"
+                placeholder="Enter pulsar name"
+                value={input}
+                onChange={(val) => setInput(val.target.value)}>
+            </input>
 
-        <button onClick={()=> handleAdd(input)}>
-            Add Pulsar
-        </button>
+            <button onClick={() => handleAdd(input)}>
+                Add Pulsar
+            </button>
 
-        <hr></hr>
-        <div>
-            <h2>Active Pulsars</h2>
-            <PulsarTable pulsars={pulsars} removePulsar={removePulsar} />
-        </div>
+            <hr></hr>
+            <div>
+                <h2>Active Pulsars</h2>
+                <PulsarTable pulsars={pulsars} removePulsar={removePulsar} />
+            </div>
         </aside>
     )
 };
@@ -121,7 +121,7 @@ interface PulsarMapProps {
     scaleFactor: number;
 }
 
-const PulsarMap: React.FC<PulsarMapProps> = ({pulsars, width, height, scaleFactor}) => {
+const PulsarMap: React.FC<PulsarMapProps> = ({ pulsars, width, height, scaleFactor }) => {
 
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [useCalculatedPeriod, setUseCalculatedPeriod] = useState(false);
@@ -140,17 +140,17 @@ const PulsarMap: React.FC<PulsarMapProps> = ({pulsars, width, height, scaleFacto
         <div>
             <hr></hr>
             <h2>Pulsar Map</h2>
-            <DatePicker selected={selectedDate} 
-                onChange={ (date) => setSelectedDate(date) }
-                dateFormat={"dd/MM/yyyy"}/>
+            <DatePicker selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                dateFormat={"dd/MM/yyyy"} />
             <button onClick={() => setUseCalculatedPeriod(!useCalculatedPeriod)}>
-                {useCalculatedPeriod ? "Using calculated period from date" : "Using period from data" }
+                {useCalculatedPeriod ? "Using calculated period from date" : "Using period from data"}
             </button>
             <div>
                 <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} >
 
                     {/* Draw line to centre of the milky way, and add a notch at the end. */}
-                    <line 
+                    <line
                         x1={centerX}
                         y1={centerY}
                         x2={centerX + scaleFactor}
@@ -158,11 +158,11 @@ const PulsarMap: React.FC<PulsarMapProps> = ({pulsars, width, height, scaleFacto
                         stroke="black"
                         strokeWidth={lineThickness}
                     />
-                    <line 
+                    <line
                         x1={centerX + scaleFactor}
-                        y1={centerY + notchLength/2}
+                        y1={centerY + notchLength / 2}
                         x2={centerX + scaleFactor}
-                        y2={centerY - notchLength/2}
+                        y2={centerY - notchLength / 2}
                         stroke="black"
                         strokeWidth={lineThickness}
                     />
@@ -189,8 +189,8 @@ const PulsarMap: React.FC<PulsarMapProps> = ({pulsars, width, height, scaleFacto
                             binary = Math.round(selectedPeriodHTransition).toString(2);
                         } else {
                             binary = Math.round(p.period_h_transition).toString(2);
-                        } 
-                        
+                        }
+
                         const ticks = [...binary]; // LSB near the end
 
                         let totalNotchLength = spaceBeforeNotch;
@@ -236,9 +236,9 @@ const PulsarMap: React.FC<PulsarMapProps> = ({pulsars, width, height, scaleFacto
                                     if (tick === '1') {
                                         // Perpendicular notch for '1'
                                         dx = notchLength * Math.cos(galacticLongitudeRad + Math.PI / 2);
-                                        notchBaseX -= dx/2;
+                                        notchBaseX -= dx / 2;
                                         dy = notchLength * Math.sin(galacticLongitudeRad + Math.PI / 2);
-                                        notchBaseY -= dy/2;
+                                        notchBaseY -= dy / 2;
                                         totalNotchLength += tickSpacing + lineThickness;
                                     } else {
                                         // Parallel notch for '0'
@@ -284,9 +284,11 @@ function App() {
         // Check if there is a comma-separated list of pulsars
         let names: Array<string> = name.split(",").map((n: string) => n.trim());
 
-        {names.map((n) => {
-            addPulsar(n);
-        })};
+        {
+            names.map((n) => {
+                addPulsar(n);
+            })
+        };
     };
 
     const addPulsar = async (name: any) => {

@@ -20,6 +20,16 @@ type Pulsar = {
     age: number;
 }
 
+type DrawingContext = {
+    startX: number;
+    startY: number;
+    angle_rad: number;
+    length: number;
+    strokeColor?: string;
+    strokeWidth?: number;
+    opacity?: number;
+}
+
 function dateToMJD(date = new Date()): number {
     const unixTimeSeconds = date.getTime() / 1000;
     const jd = unixTimeSeconds / 86400 + 2440587.5; // Convert to Julian Date
@@ -193,7 +203,14 @@ const PulsarMap: React.FC<PulsarMapProps> = ({ pulsars, width, height, scaleFact
 
                         const ticks = [...binary]; // LSB near the end
 
-                        let totalNotchLength = spaceBeforeNotch;
+                        const notchR = xyDistance + zDistance + spaceBeforeNotch;
+                        const drawing_context: DrawingContext = {
+                            startX: centerX + notchR * Math.cos(galacticLongitudeRad),
+                            startY: centerY + notchR * Math.sin(galacticLongitudeRad),
+                            angle_rad: galacticLongitudeRad,
+                            length: notchLength,
+                            strokeWidth: lineThickness,
+                        }
 
                         return (
                             <g key={index}>
@@ -226,39 +243,7 @@ const PulsarMap: React.FC<PulsarMapProps> = ({ pulsars, width, height, scaleFact
                                 />
 
                                 {/* Draw the ticks indicating the binary representation of pulsar period */}
-                                {ticks.map((tick, tickIndex) => {
-
-                                    const notchR = xyDistance + zDistance + totalNotchLength;
-                                    let notchBaseX = centerX + notchR * Math.cos(galacticLongitudeRad);
-                                    let notchBaseY = centerY + notchR * Math.sin(galacticLongitudeRad);
-
-                                    let dx, dy;
-                                    if (tick === '1') {
-                                        // Perpendicular notch for '1'
-                                        dx = notchLength * Math.cos(galacticLongitudeRad + Math.PI / 2);
-                                        notchBaseX -= dx / 2;
-                                        dy = notchLength * Math.sin(galacticLongitudeRad + Math.PI / 2);
-                                        notchBaseY -= dy / 2;
-                                        totalNotchLength += tickSpacing + lineThickness;
-                                    } else {
-                                        // Parallel notch for '0'
-                                        dx = notchLength * Math.cos(galacticLongitudeRad);
-                                        dy = notchLength * Math.sin(galacticLongitudeRad);
-                                        totalNotchLength += tickSpacing + notchLength;
-                                    }
-
-                                    return (
-                                        <line
-                                            key={tickIndex}
-                                            x1={notchBaseX}
-                                            y1={notchBaseY}
-                                            x2={notchBaseX + dx}
-                                            y2={notchBaseY + dy}
-                                            stroke="black"
-                                            strokeWidth={lineThickness}
-                                        />
-                                    )
-                                })};
+                                {PulsarMapNotches({ ticks: ticks, drawing_context: drawing_context })}
                                 {/* Draw the pulsar name */}
                                 {/* <text
                                     x={x}
@@ -275,6 +260,52 @@ const PulsarMap: React.FC<PulsarMapProps> = ({ pulsars, width, height, scaleFact
         </div>
     );
 };
+
+interface PulsarMapNotchesProps {
+    ticks: string[];
+    drawing_context: DrawingContext;
+}
+const PulsarMapNotches: React.FC<PulsarMapNotchesProps> = ({ ticks, drawing_context }) => {
+
+    let totalNotchLength = 0;
+    const tickSpacing = drawing_context.length * 0.15;
+
+    return ticks.map((tick, tickIndex) => {
+
+        let notchBaseX = drawing_context.startX + totalNotchLength * Math.cos(drawing_context.angle_rad);
+        let notchBaseY = drawing_context.startY + totalNotchLength * Math.sin(drawing_context.angle_rad);
+
+        console.log(totalNotchLength, drawing_context)
+
+        let dx, dy;
+        if (tick === '1') {
+            // Perpendicular notch for '1'
+            dx = drawing_context.length * Math.cos(drawing_context.angle_rad + Math.PI / 2);
+            notchBaseX -= dx / 2;
+            dy = drawing_context.length * Math.sin(drawing_context.angle_rad + Math.PI / 2);
+            notchBaseY -= dy / 2;
+            totalNotchLength += tickSpacing + drawing_context.strokeWidth;
+        } else {
+            // Parallel notch for '0'
+            dx = drawing_context.length * Math.cos(drawing_context.angle_rad);
+            dy = drawing_context.length * Math.sin(drawing_context.angle_rad);
+            totalNotchLength += tickSpacing + drawing_context.length;
+        }
+
+        return (
+            <line
+                key={tickIndex}
+                x1={notchBaseX}
+                y1={notchBaseY}
+                x2={notchBaseX + dx}
+                y2={notchBaseY + dy}
+                stroke="black"
+                strokeWidth={drawing_context.strokeWidth}
+            />
+        )
+    })
+};
+
 
 function App() {
 

@@ -287,9 +287,10 @@ const PulsarMapNotches: React.FC<PulsarMapNotchesProps> = ({ ticks, drawing_cont
             totalNotchLength += tickSpacing + drawing_context.strokeWidth;
         } else {
             // Parallel notch for '0'
-            dx = drawing_context.length * Math.cos(drawing_context.angle_rad);
-            dy = drawing_context.length * Math.sin(drawing_context.angle_rad);
-            totalNotchLength += tickSpacing + drawing_context.length;
+            const parallell_line_scaling = 0.7;
+            dx = drawing_context.length * Math.cos(drawing_context.angle_rad) * parallell_line_scaling;
+            dy = drawing_context.length * Math.sin(drawing_context.angle_rad) * parallell_line_scaling;
+            totalNotchLength += tickSpacing + drawing_context.length * parallell_line_scaling + drawing_context.strokeWidth;
         }
 
         return (
